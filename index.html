@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeopardy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul-fondo:#050A2E;
+    --azul-tablero:#0C1A8F;
+    --azul-celda:#1126C2;
+    --azul-celda-hover:#1E37E0;
+    --azul-borde:#2A3FD6;
+    --oro:#E8B23A;
+    --oro-claro:#F4CD68;
+    --blanco:#F3F4FC;
+    --tenue:#6A77C9;
+    --usada:#0A1252;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--azul-fondo);
+    color:var(--blanco);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100%;
+    padding:clamp(12px,3vw,32px);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Encabezado ---------- */
+  header{
+    text-align:center;
+    margin-bottom:clamp(16px,2.5vw,28px);
+  }
+  h1{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(38px,8vw,82px);
+    letter-spacing:.04em;
+    line-height:.92;
+    color:var(--oro);
+    text-transform:uppercase;
+    text-shadow:0 3px 0 rgba(0,0,0,.35);
+  }
+  .subtitulo{
+    margin-top:8px;
+    color:var(--tenue);
+    font-size:13px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-weight:600;
+  }
+
+  /* ---------- Marcador de equipos ---------- */
+  .marcador{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin:0 auto clamp(18px,2.5vw,30px);
+    max-width:1100px;
+  }
+  .equipo{
+    flex:1 1 150px;
+    min-width:140px;
+    max-width:220px;
+    background:var(--azul-tablero);
+    border:1px solid var(--azul-borde);
+    border-radius:12px;
+    padding:12px 14px;
+    text-align:center;
+  }
+  .equipo .nombre{
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:.02em;
+    outline:none;
+    border-radius:4px;
+    padding:2px 4px;
+  }
+  .equipo .nombre:focus{background:rgba(255,255,255,.08)}
+  .equipo .puntaje{
+    font-family:'Anton',sans-serif;
+    font-size:34px;
+    color:var(--oro);
+    line-height:1.1;
+    margin-top:2px;
+  }
+  .equipo .puntaje.neg{color:#FF8A8A}
+
+  /* ---------- Tablero ---------- */
+  .tablero-wrap{
+    max-width:1100px;
+    margin:0 auto;
+    overflow-x:auto;
+  }
+  .tablero{
+    display:grid;
+    gap:8px;
+    min-width:560px;
+  }
+  .categoria{
+    background:var(--azul-tablero);
+    border:1px solid var(--azul-borde);
+    border-radius:8px;
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:8px 6px;
+    font-family:'Anton',sans-serif;
+    text-transform:uppercase;
+    font-size:clamp(12px,1.5vw,17px);
+    letter-spacing:.03em;
+    line-height:1.05;
+  }
+  .celda{
+    background:var(--azul-celda);
+    border:1px solid var(--azul-borde);
+    border-radius:8px;
+    min-height:62px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Anton',sans-serif;
+    font-size:clamp(20px,3vw,34px);
+    color:var(--oro);
+    cursor:pointer;
+    transition:background .12s ease, transform .08s ease;
+    text-shadow:0 2px 0 rgba(0,0,0,.3);
+  }
+  .celda:hover{background:var(--azul-celda-hover);transform:translateY(-2px)}
+  .celda:focus-visible{outline:3px solid var(--oro-claro);outline-offset:2px}
+  .celda.usada{
+    background:var(--usada);
+    color:transparent;
+    cursor:default;
+    pointer-events:none;
+    border-color:#1A256E;
+  }
+
+  /* ---------- Controles ---------- */
+  .controles{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:clamp(18px,2.5vw,28px);
+  }
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.04em;
+    color:var(--blanco);
+    background:transparent;
+    border:1px solid var(--azul-borde);
+    border-radius:8px;
+    padding:9px 16px;
+    cursor:pointer;
+    transition:background .12s ease,border-color .12s ease;
+  }
+  .btn:hover{background:var(--azul-tablero);border-color:var(--tenue)}
+
+  /* ---------- Overlay de pista ---------- */
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:var(--azul-tablero);
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:clamp(24px,5vw,64px);
+    z-index:50;
+    animation:aparecer .18s ease;
+  }
+  .overlay.abierto{display:flex}
+  @keyframes aparecer{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+  .overlay .meta{
+    font-family:'Inter',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    font-weight:700;
+    font-size:14px;
+    color:var(--oro);
+    margin-bottom:clamp(20px,4vw,40px);
+  }
+  .overlay .pista{
+    font-size:clamp(24px,5vw,52px);
+    font-weight:600;
+    line-height:1.18;
+    max-width:18ch;
+  }
+  .overlay .respuesta{
+    margin-top:clamp(18px,3vw,32px);
+    font-family:'Anton',sans-serif;
+    font-size:clamp(26px,5vw,54px);
+    color:var(--oro-claro);
+    line-height:1.1;
+    display:none;
+  }
+  .overlay .respuesta.visible{display:block;animation:aparecer .2s ease}
+  .overlay .pista-ayuda{
+    margin-top:clamp(24px,4vw,44px);
+    color:rgba(243,244,252,.6);
+    font-size:13px;
+    letter-spacing:.06em;
+  }
+
+  /* ---------- Panel de puntaje en overlay ---------- */
+  .panel{
+    display:none;
+    margin-top:clamp(24px,4vw,40px);
+    width:100%;
+    max-width:760px;
+  }
+  .panel.visible{display:block;animation:aparecer .2s ease}
+  .panel-titulo{
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:rgba(243,244,252,.55);margin-bottom:14px;font-weight:600;
+  }
+  .puntos-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .puntos-equipo{
+    background:rgba(0,0,0,.22);
+    border:1px solid var(--azul-borde);
+    border-radius:10px;
+    padding:10px 12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .puntos-equipo .pe-nombre{font-weight:600;font-size:13px;max-width:120px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pe-btn{
+    width:34px;height:34px;border-radius:8px;border:none;cursor:pointer;
+    font-family:'Anton',sans-serif;font-size:20px;line-height:1;color:#fff;
+    transition:transform .08s ease,filter .12s ease;
+  }
+  .pe-btn:hover{transform:translateY(-1px);filter:brightness(1.12)}
+  .pe-btn.mas{background:#1E7F4E}
+  .pe-btn.menos{background:#A23B3B}
+  .panel .cerrar{margin-top:18px}
+
+  @media (max-width:600px){
+    .overlay .pista{max-width:none}
+    .puntos-equipo .pe-nombre{max-width:84px}
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>Jeopardy</h1>
+    <div class="subtitulo">Ampliada Tecnología · Walmart Chile</div>
+  </header>
+
+  <div class="marcador" id="marcador"></div>
+
+  <div class="tablero-wrap">
+    <div class="tablero" id="tablero"></div>
+  </div>
+
+  <div class="controles">
+    <button class="btn" onclick="reiniciarTablero()">Reiniciar tablero</button>
+    <button class="btn" onclick="reiniciarPuntajes()">Reiniciar puntajes</button>
+  </div>
+
+  <!-- Overlay de pista -->
+  <div class="overlay" id="overlay">
+    <div class="meta" id="ovMeta"></div>
+    <div class="pista" id="ovPista"></div>
+    <div class="respuesta" id="ovRespuesta"></div>
+    <div class="pista-ayuda" id="ovAyuda">Toca o presiona Espacio para revelar la respuesta</div>
+
+    <div class="panel" id="ovPanel">
+      <div class="panel-titulo">Sumar o restar puntaje</div>
+      <div class="puntos-grid" id="ovPuntos"></div>
+      <button class="btn cerrar" onclick="cerrarOverlay()">Cerrar</button>
+    </div>
+  </div>
+
+<script>
+/* =======================================================================
+   EDITA TU JUEGO AQUÍ 👇
+   - categorias: cada una con su "nombre" y 5 preguntas (o las que quieras).
+   - cada pregunta: { puntos, pista, respuesta }
+   - equipos: los nombres iniciales (luego puedes editarlos en pantalla).
+   ======================================================================= */
+const JUEGO = {
+  equipos: ["Equipo Rojo", "Equipo Azul", "Equipo Verde", "Equipo Amarillo"],
+  categorias: [
+    {
+      nombre: "Mundo Walmart",
+      preguntas: [
+        { puntos:100, pista:"Marca de supermercados con la que opera Walmart en Chile.", respuesta:"Líder" },
+        { puntos:200, pista:"Año en que Walmart llegó a Chile, al adquirir D&S.", respuesta:"2009" },
+        { puntos:300, pista:"Fundador de Walmart, que abrió su primera tienda en 1962.", respuesta:"Sam Walton" },
+        { puntos:400, pista:"Completa el propósito: 'ayudar a las personas a ahorrar dinero para que…'", respuesta:"…vivan mejor" },
+        { puntos:500, pista:"Ciudad de Arkansas (EE.UU.) donde está la casa matriz de Walmart.", respuesta:"Bentonville" },
+      ]
+    },
+    {
+      nombre: "Dato Mata Relato",
+      preguntas: [
+        { puntos:100, pista:"Herramienta de Microsoft para crear dashboards y reportes visuales.", respuesta:"Power BI" },
+        { puntos:200, pista:"Lenguaje estándar para consultar bases de datos relacionales.", respuesta:"SQL" },
+        { puntos:300, pista:"Servicio de data warehouse de Google para analizar datos a gran escala.", respuesta:"BigQuery" },
+        { puntos:400, pista:"Tipo de gráfico ideal para mostrar la evolución de un valor en el tiempo.", respuesta:"Gráfico de líneas" },
+        { puntos:500, pista:"Sigla del proceso de Extraer, Transformar y Cargar datos.", respuesta:"ETL" },
+      ]
+    },
+    {
+      nombre: "IA, Mi Estimada",
+      preguntas: [
+        { puntos:100, pista:"Asistente de IA de Anthropic (probablemente ayudó a armar esta reunión).", respuesta:"Claude" },
+        { puntos:200, pista:"Nombre de la instrucción o texto que le das a una IA para obtener respuesta.", respuesta:"Un prompt" },
+        { puntos:300, pista:"Término en inglés para la IA que crea texto, imágenes o código.", respuesta:"IA Generativa (GenAI)" },
+        { puntos:400, pista:"Cuando un modelo inventa datos falsos con total seguridad, se llama así.", respuesta:"Alucinación" },
+        { puntos:500, pista:"Arquitectura de redes neuronales (2017) detrás de los modelos de lenguaje actuales.", respuesta:"Transformer" },
+      ]
+    },
+    {
+      nombre: "Sopa de Siglas",
+      preguntas: [
+        { puntos:100, pista:"Sigla de la interfaz que permite que dos sistemas se comuniquen.", respuesta:"API" },
+        { puntos:200, pista:"Sigla de la unidad central de procesamiento de un computador.", respuesta:"CPU" },
+        { puntos:300, pista:"Sigla de 'preguntas frecuentes'.", respuesta:"FAQ" },
+        { puntos:400, pista:"Sigla del protocolo seguro que aparece al inicio de una dirección web.", respuesta:"HTTPS" },
+        { puntos:500, pista:"Sigla de 'producto mínimo viable' en desarrollo de productos.", respuesta:"MVP" },
+      ]
+    },
+    {
+      nombre: "Modo Geek",
+      preguntas: [
+        { puntos:100, pista:"Sistema operativo de pingüino, símbolo del software libre.", respuesta:"Linux" },
+        { puntos:200, pista:"Plataforma donde los desarrolladores guardan y comparten su código.", respuesta:"GitHub" },
+        { puntos:300, pista:"Atajo de teclado para copiar en Windows.", respuesta:"Ctrl + C" },
+        { puntos:400, pista:"En programación, un error o falla en el código (insecto en inglés).", respuesta:"Bug" },
+        { puntos:500, pista:"Empresa fundada en un garaje en 1976 por Steve Jobs y Steve Wozniak.", respuesta:"Apple" },
+      ]
+    },
+  ]
+};
+/* ===================== FIN DE LA EDICIÓN ===================== */
+
+
+/* ---------- Estado ---------- */
+const equipos = JUEGO.equipos.map(n => ({ nombre:n, puntaje:0 }));
+let actual = null; // { cat, idx, puntos }
+
+/* ---------- Render del marcador ---------- */
+function renderMarcador(){
+  const cont = document.getElementById('marcador');
+  cont.innerHTML = '';
+  equipos.forEach((e,i)=>{
+    const div = document.createElement('div');
+    div.className = 'equipo';
+    div.innerHTML = `
+      <div class="nombre" contenteditable="true" spellcheck="false"
+           onblur="renombrar(${i}, this.textContent)">${e.nombre}</div>
+      <div class="puntaje ${e.puntaje<0?'neg':''}" id="pj-${i}">${e.puntaje}</div>`;
+    cont.appendChild(div);
+  });
+}
+function renderPuntajes(){
+  equipos.forEach((e,i)=>{
+    const el = document.getElementById('pj-'+i);
+    el.textContent = e.puntaje;
+    el.classList.toggle('neg', e.puntaje<0);
+  });
+}
+function renombrar(i, txt){ equipos[i].nombre = txt.trim() || ('Equipo '+(i+1)); }
+
+/* ---------- Render del tablero ---------- */
+function renderTablero(){
+  const cats = JUEGO.categorias;
+  const tablero = document.getElementById('tablero');
+  tablero.style.gridTemplateColumns = `repeat(${cats.length}, 1fr)`;
+  tablero.innerHTML = '';
+
+  // Fila de categorías
+  cats.forEach(c=>{
+    const h = document.createElement('div');
+    h.className = 'categoria';
+    h.textContent = c.nombre;
+    tablero.appendChild(h);
+  });
+
+  // Filas de puntajes
+  const maxFilas = Math.max(...cats.map(c=>c.preguntas.length));
+  for(let f=0; f<maxFilas; f++){
+    cats.forEach((c,ci)=>{
+      const preg = c.preguntas[f];
+      const celda = document.createElement('div');
+      celda.className = 'celda';
+      if(!preg){ celda.classList.add('usada'); tablero.appendChild(celda); return; }
+      celda.textContent = preg.puntos;
+      celda.tabIndex = 0;
+      celda.setAttribute('role','button');
+      celda.setAttribute('aria-label', `${c.nombre}, ${preg.puntos} puntos`);
+      const abrir = ()=>abrirPista(ci, f, celda);
+      celda.addEventListener('click', abrir);
+      celda.addEventListener('keydown', ev=>{
+        if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); abrir(); }
+      });
+      tablero.appendChild(celda);
+    });
+  }
+}
+
+/* ---------- Overlay ---------- */
+function abrirPista(ci, fi, celda){
+  const cat = JUEGO.categorias[ci];
+  const preg = cat.preguntas[fi];
+  actual = { celda, puntos:preg.puntos };
+
+  document.getElementById('ovMeta').textContent = `${cat.nombre} · ${preg.puntos}`;
+  document.getElementById('ovPista').textContent = preg.pista;
+  document.getElementById('ovRespuesta').textContent = preg.respuesta;
+
+  document.getElementById('ovRespuesta').classList.remove('visible');
+  document.getElementById('ovPanel').classList.remove('visible');
+  document.getElementById('ovAyuda').style.display = 'block';
+
+  document.getElementById('overlay').classList.add('abierto');
+}
+
+function revelar(){
+  document.getElementById('ovRespuesta').classList.add('visible');
+  document.getElementById('ovAyuda').style.display = 'none';
+  renderPanelPuntos();
+  document.getElementById('ovPanel').classList.add('visible');
+}
+
+function renderPanelPuntos(){
+  const cont = document.getElementById('ovPuntos');
+  const v = actual.puntos;
+  cont.innerHTML = '';
+  equipos.forEach((e,i)=>{
+    const div = document.createElement('div');
+    div.className = 'puntos-equipo';
+    div.innerHTML = `
+      <button class="pe-btn menos" title="Restar ${v}" onclick="sumar(${i},${-v})">−</button>
+      <span class="pe-nombre">${e.nombre}</span>
+      <button class="pe-btn mas" title="Sumar ${v}" onclick="sumar(${i},${v})">+</button>`;
+    cont.appendChild(div);
+  });
+}
+
+function sumar(i, n){ equipos[i].puntaje += n; renderPuntajes(); }
+
+function cerrarOverlay(){
+  if(actual && actual.celda) actual.celda.classList.add('usada');
+  document.getElementById('overlay').classList.remove('abierto');
+  actual = null;
+}
+
+/* ---------- Atajos de teclado ---------- */
+document.addEventListener('keydown', ev=>{
+  if(!document.getElementById('overlay').classList.contains('abierto')) return;
+  const yaRevelada = document.getElementById('ovRespuesta').classList.contains('visible');
+  if(ev.key===' ' || ev.key==='Enter'){
+    ev.preventDefault();
+    if(!yaRevelada) revelar();
+  }
+  if(ev.key==='Escape') cerrarOverlay();
+});
+// Click en el fondo del overlay revela la respuesta
+document.getElementById('overlay').addEventListener('click', ev=>{
+  const panel = document.getElementById('ovPanel');
+  if(panel.contains(ev.target)) return;
+  if(!document.getElementById('ovRespuesta').classList.contains('visible')) revelar();
+});
+
+/* ---------- Reinicios ---------- */
+function reiniciarTablero(){
+  document.querySelectorAll('.celda').forEach(c=>{
+    if(c.textContent || c.getAttribute('role')==='button') c.classList.remove('usada');
+  });
+  renderTablero();
+}
+function reiniciarPuntajes(){
+  equipos.forEach(e=>e.puntaje=0);
+  renderPuntajes();
+}
+
+/* ---------- Init ---------- */
+renderMarcador();
+renderTablero();
+</script>
+</body>
+</html>
