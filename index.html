@@ -38,7 +38,7 @@
   }
   h1{
     font-family:'Anton',sans-serif;
-    font-size:clamp(38px,8vw,82px);
+    font-size:clamp(56px,9vw,128px);
     letter-spacing:.04em;
     line-height:.92;
     color:var(--oro);
@@ -46,9 +46,9 @@
     text-shadow:0 3px 0 rgba(0,0,0,.35);
   }
   .subtitulo{
-    margin-top:8px;
+    margin-top:10px;
     color:var(--tenue);
-    font-size:13px;
+    font-size:22px;
     letter-spacing:.18em;
     text-transform:uppercase;
     font-weight:600;
@@ -64,30 +64,30 @@
     max-width:1100px;
   }
   .equipo{
-    flex:1 1 150px;
-    min-width:140px;
-    max-width:220px;
+    flex:1 1 190px;
+    min-width:180px;
+    max-width:300px;
     background:var(--azul-tablero);
     border:1px solid var(--azul-borde);
-    border-radius:12px;
-    padding:12px 14px;
+    border-radius:14px;
+    padding:16px 18px;
     text-align:center;
   }
   .equipo .nombre{
     font-weight:700;
-    font-size:14px;
+    font-size:22px;
     letter-spacing:.02em;
     outline:none;
     border-radius:4px;
-    padding:2px 4px;
+    padding:3px 6px;
   }
   .equipo .nombre:focus{background:rgba(255,255,255,.08)}
   .equipo .puntaje{
     font-family:'Anton',sans-serif;
-    font-size:34px;
+    font-size:56px;
     color:var(--oro);
     line-height:1.1;
-    margin-top:2px;
+    margin-top:4px;
   }
   .equipo .puntaje.neg{color:#FF8A8A}
 
@@ -99,22 +99,22 @@
   }
   .tablero{
     display:grid;
-    gap:8px;
-    min-width:560px;
+    gap:10px;
+    min-width:640px;
   }
   .categoria{
     background:var(--azul-tablero);
     border:1px solid var(--azul-borde);
     border-radius:8px;
-    min-height:70px;
+    min-height:96px;
     display:flex;
     align-items:center;
     justify-content:center;
     text-align:center;
-    padding:8px 6px;
+    padding:12px 8px;
     font-family:'Anton',sans-serif;
     text-transform:uppercase;
-    font-size:clamp(12px,1.5vw,17px);
+    font-size:clamp(17px,1.9vw,28px);
     letter-spacing:.03em;
     line-height:1.05;
   }
@@ -122,12 +122,12 @@
     background:var(--azul-celda);
     border:1px solid var(--azul-borde);
     border-radius:8px;
-    min-height:62px;
+    min-height:92px;
     display:flex;
     align-items:center;
     justify-content:center;
     font-family:'Anton',sans-serif;
-    font-size:clamp(20px,3vw,34px);
+    font-size:clamp(30px,3.6vw,54px);
     color:var(--oro);
     cursor:pointer;
     transition:background .12s ease, transform .08s ease;
@@ -154,17 +154,21 @@
   .btn{
     font-family:'Inter',sans-serif;
     font-weight:600;
-    font-size:13px;
+    font-size:17px;
     letter-spacing:.04em;
     color:var(--blanco);
     background:transparent;
     border:1px solid var(--azul-borde);
     border-radius:8px;
-    padding:9px 16px;
+    padding:12px 22px;
     cursor:pointer;
     transition:background .12s ease,border-color .12s ease;
   }
   .btn:hover{background:var(--azul-tablero);border-color:var(--tenue)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:disabled:hover{background:transparent;border-color:var(--azul-borde)}
+  .btn-deshacer{border-color:var(--oro);color:var(--oro-claro)}
+  .btn-deshacer:not(:disabled):hover{background:rgba(232,178,58,.12);border-color:var(--oro)}
 
   /* ---------- Overlay de pista ---------- */
   .overlay{
@@ -187,29 +191,29 @@
     text-transform:uppercase;
     letter-spacing:.16em;
     font-weight:700;
-    font-size:14px;
+    font-size:24px;
     color:var(--oro);
-    margin-bottom:clamp(20px,4vw,40px);
+    margin-bottom:clamp(24px,4vw,48px);
   }
   .overlay .pista{
-    font-size:clamp(24px,5vw,52px);
+    font-size:clamp(36px,5.5vw,88px);
     font-weight:600;
     line-height:1.18;
-    max-width:18ch;
+    max-width:22ch;
   }
   .overlay .respuesta{
-    margin-top:clamp(18px,3vw,32px);
+    margin-top:clamp(22px,3vw,40px);
     font-family:'Anton',sans-serif;
-    font-size:clamp(26px,5vw,54px);
+    font-size:clamp(38px,5.5vw,92px);
     color:var(--oro-claro);
     line-height:1.1;
     display:none;
   }
   .overlay .respuesta.visible{display:block;animation:aparecer .2s ease}
   .overlay .pista-ayuda{
-    margin-top:clamp(24px,4vw,44px);
+    margin-top:clamp(28px,4vw,52px);
     color:rgba(243,244,252,.6);
-    font-size:13px;
+    font-size:19px;
     letter-spacing:.06em;
   }
 
@@ -222,28 +226,35 @@
   }
   .panel.visible{display:block;animation:aparecer .2s ease}
   .panel-titulo{
-    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
-    color:rgba(243,244,252,.55);margin-bottom:14px;font-weight:600;
+    font-size:16px;letter-spacing:.16em;text-transform:uppercase;
+    color:rgba(243,244,252,.55);margin-bottom:16px;font-weight:600;
   }
-  .puntos-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .puntos-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
   .puntos-equipo{
     background:rgba(0,0,0,.22);
     border:1px solid var(--azul-borde);
     border-radius:10px;
-    padding:10px 12px;
+    padding:7px 11px;
     display:flex;align-items:center;gap:8px;
   }
-  .puntos-equipo .pe-nombre{font-weight:600;font-size:13px;max-width:120px;
+  .puntos-equipo .pe-nombre{font-weight:600;font-size:15px;max-width:140px;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .pe-btn{
-    width:34px;height:34px;border-radius:8px;border:none;cursor:pointer;
-    font-family:'Anton',sans-serif;font-size:20px;line-height:1;color:#fff;
-    transition:transform .08s ease,filter .12s ease;
+    width:40px;height:40px;border-radius:10px;border:none;cursor:pointer;
+    font-family:'Anton',sans-serif;font-size:24px;line-height:1;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 3px 0 rgba(0,0,0,.28), 0 5px 10px rgba(0,0,0,.20);
+    transition:transform .09s ease, box-shadow .09s ease, filter .12s ease;
+    text-shadow:0 1px 1px rgba(0,0,0,.25);
   }
-  .pe-btn:hover{transform:translateY(-1px);filter:brightness(1.12)}
-  .pe-btn.mas{background:#1E7F4E}
-  .pe-btn.menos{background:#A23B3B}
-  .panel .cerrar{margin-top:18px}
+  .pe-btn:hover{filter:brightness(1.08)}
+  .pe-btn:active{transform:translateY(3px);
+    box-shadow:0 1px 0 rgba(0,0,0,.30), 0 2px 6px rgba(0,0,0,.22)}
+  .pe-btn.mas{background:linear-gradient(180deg,#3ED17F 0%,#1FA55F 100%)}
+  .pe-btn.mas:active{background:linear-gradient(180deg,#37BE73 0%,#1B9455 100%)}
+  .pe-btn.menos{background:linear-gradient(180deg,#F26551 0%,#D63B2B 100%)}
+  .pe-btn.menos:active{background:linear-gradient(180deg,#E45B48 0%,#C33526 100%)}
+  .panel-acciones{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 
   @media (max-width:600px){
     .overlay .pista{max-width:none}
@@ -255,7 +266,7 @@
 
   <header>
     <h1>Jeopardy</h1>
-    <div class="subtitulo">Ampliada Tecnología · Walmart Chile</div>
+    <div class="subtitulo">Ampliada Data</div>
   </header>
 
   <div class="marcador" id="marcador"></div>
@@ -265,6 +276,7 @@
   </div>
 
   <div class="controles">
+    <button class="btn btn-deshacer js-deshacer" id="btnDeshacer" onclick="deshacer()" disabled>↶ Deshacer</button>
     <button class="btn" onclick="reiniciarTablero()">Reiniciar tablero</button>
     <button class="btn" onclick="reiniciarPuntajes()">Reiniciar puntajes</button>
   </div>
@@ -279,7 +291,10 @@
     <div class="panel" id="ovPanel">
       <div class="panel-titulo">Sumar o restar puntaje</div>
       <div class="puntos-grid" id="ovPuntos"></div>
-      <button class="btn cerrar" onclick="cerrarOverlay()">Cerrar</button>
+      <div class="panel-acciones">
+        <button class="btn btn-deshacer js-deshacer" onclick="deshacer()" disabled>↶ Deshacer</button>
+        <button class="btn cerrar" onclick="cerrarOverlay()">Cerrar</button>
+      </div>
     </div>
   </div>
 
@@ -291,56 +306,51 @@
    - equipos: los nombres iniciales (luego puedes editarlos en pantalla).
    ======================================================================= */
 const JUEGO = {
-  equipos: ["Equipo Rojo", "Equipo Azul", "Equipo Verde", "Equipo Amarillo"],
+  equipos: ["IA", "Datos", "Data Value", "Ingeniería", "Data Governance"],
   categorias: [
     {
       nombre: "Mundo Walmart",
       preguntas: [
-        { puntos:100, pista:"Marca de supermercados con la que opera Walmart en Chile.", respuesta:"Líder" },
-        { puntos:200, pista:"Año en que Walmart llegó a Chile, al adquirir D&S.", respuesta:"2009" },
-        { puntos:300, pista:"Fundador de Walmart, que abrió su primera tienda en 1962.", respuesta:"Sam Walton" },
-        { puntos:400, pista:"Completa el propósito: 'ayudar a las personas a ahorrar dinero para que…'", respuesta:"…vivan mejor" },
-        { puntos:500, pista:"Ciudad de Arkansas (EE.UU.) donde está la casa matriz de Walmart.", respuesta:"Bentonville" },
+        { puntos:100, pista:"Completa el propósito: 'ayudar a las personas a ahorrar dinero para que…'", respuesta:"…vivan mejor" },
+        { puntos:200, pista:"Fundador de Walmart, que abrió su primera tienda en 1962.", respuesta:"Sam Walton" },
+        { puntos:300, pista:"Año en que Walmart llegó a Chile, al adquirir D&S.", respuesta:"2009" },
+        { puntos:400, pista:"Ciudad de California (EE.UU.) donde está el campus de Walmart Labs y Walmart Global Tech.", respuesta:"Sunnyvale" },
       ]
     },
     {
       nombre: "Dato Mata Relato",
       preguntas: [
-        { puntos:100, pista:"Herramienta de Microsoft para crear dashboards y reportes visuales.", respuesta:"Power BI" },
-        { puntos:200, pista:"Lenguaje estándar para consultar bases de datos relacionales.", respuesta:"SQL" },
-        { puntos:300, pista:"Servicio de data warehouse de Google para analizar datos a gran escala.", respuesta:"BigQuery" },
-        { puntos:400, pista:"Tipo de gráfico ideal para mostrar la evolución de un valor en el tiempo.", respuesta:"Gráfico de líneas" },
-        { puntos:500, pista:"Sigla del proceso de Extraer, Transformar y Cargar datos.", respuesta:"ETL" },
+        { puntos:100, pista:"Lenguaje estándar para consultar bases de datos relacionales.", respuesta:"SQL" },
+        { puntos:200, pista:"Servicio de data warehouse de Google para analizar datos a gran escala.", respuesta:"BigQuery" },
+        { puntos:300, pista:"Tipo de gráfico ideal para mostrar la evolución de un valor en el tiempo.", respuesta:"Gráfico de líneas" },
+        { puntos:400, pista:"Sigla del proceso de Extraer, Transformar y Cargar datos.", respuesta:"ETL" },
       ]
     },
     {
-      nombre: "IA, Mi Estimada",
+      nombre: "Aló IA",
       preguntas: [
-        { puntos:100, pista:"Asistente de IA de Anthropic (probablemente ayudó a armar esta reunión).", respuesta:"Claude" },
-        { puntos:200, pista:"Nombre de la instrucción o texto que le das a una IA para obtener respuesta.", respuesta:"Un prompt" },
+        { puntos:100, pista:"Cuando un modelo inventa datos falsos con total seguridad, se llama así.", respuesta:"Alucinación" },
+        { puntos:200, pista:"Asistente de IA de Anthropic.", respuesta:"Claude" },
         { puntos:300, pista:"Término en inglés para la IA que crea texto, imágenes o código.", respuesta:"IA Generativa (GenAI)" },
-        { puntos:400, pista:"Cuando un modelo inventa datos falsos con total seguridad, se llama así.", respuesta:"Alucinación" },
-        { puntos:500, pista:"Arquitectura de redes neuronales (2017) detrás de los modelos de lenguaje actuales.", respuesta:"Transformer" },
+        { puntos:400, pista:"Arquitectura de redes neuronales (2017) detrás de los modelos de lenguaje actuales.", respuesta:"Transformer" },
       ]
     },
     {
       nombre: "Sopa de Siglas",
       preguntas: [
-        { puntos:100, pista:"Sigla de la interfaz que permite que dos sistemas se comuniquen.", respuesta:"API" },
-        { puntos:200, pista:"Sigla de la unidad central de procesamiento de un computador.", respuesta:"CPU" },
-        { puntos:300, pista:"Sigla de 'preguntas frecuentes'.", respuesta:"FAQ" },
-        { puntos:400, pista:"Sigla del protocolo seguro que aparece al inicio de una dirección web.", respuesta:"HTTPS" },
-        { puntos:500, pista:"Sigla de 'producto mínimo viable' en desarrollo de productos.", respuesta:"MVP" },
+        { puntos:100, pista:"Sigla de la unidad central de procesamiento de un computador.", respuesta:"CPU" },
+        { puntos:200, pista:"Sigla de 'preguntas frecuentes'.", respuesta:"FAQ" },
+        { puntos:300, pista:"Sigla del protocolo seguro que aparece al inicio de una dirección web.", respuesta:"HTTPS" },
+        { puntos:400, pista:"Sigla de 'producto mínimo viable' en desarrollo de productos.", respuesta:"MVP" },
       ]
     },
     {
-      nombre: "Modo Geek",
+      nombre: "Sebastián Torres",
       preguntas: [
-        { puntos:100, pista:"Sistema operativo de pingüino, símbolo del software libre.", respuesta:"Linux" },
-        { puntos:200, pista:"Plataforma donde los desarrolladores guardan y comparten su código.", respuesta:"GitHub" },
-        { puntos:300, pista:"Atajo de teclado para copiar en Windows.", respuesta:"Ctrl + C" },
-        { puntos:400, pista:"En programación, un error o falla en el código (insecto en inglés).", respuesta:"Bug" },
-        { puntos:500, pista:"Empresa fundada en un garaje en 1976 por Steve Jobs y Steve Wozniak.", respuesta:"Apple" },
+        { puntos:100, pista:"La carrera que estudió Seba.", respuesta:"Ingeniería Civil Matemática" },
+        { puntos:200, pista:"El nombre de la esposa de Seba.", respuesta:"Tanya" },
+        { puntos:300, pista:"El tipo de mascota que tiene Seba.", respuesta:"Canario" },
+        { puntos:400, pista:"El último día de Seba con el equipo.", respuesta:"Miércoles 15 de julio" },
       ]
     },
   ]
@@ -351,6 +361,34 @@ const JUEGO = {
 /* ---------- Estado ---------- */
 const equipos = JUEGO.equipos.map(n => ({ nombre:n, puntaje:0 }));
 let actual = null; // { cat, idx, puntos }
+
+/* ---------- Historial / Deshacer ---------- */
+const historial = [];
+const MAX_HISTORIAL = 50;
+
+function estadoActual(){
+  return {
+    puntajes: equipos.map(e => e.puntaje),
+    usadas: [...document.querySelectorAll('.celda')].map(c => c.classList.contains('usada'))
+  };
+}
+function guardarEstado(){
+  historial.push(estadoActual());
+  if(historial.length > MAX_HISTORIAL) historial.shift();
+  actualizarBotonDeshacer();
+}
+function deshacer(){
+  const s = historial.pop();
+  if(!s) return;
+  s.puntajes.forEach((p,i) => { if(equipos[i]) equipos[i].puntaje = p; });
+  renderPuntajes();
+  document.querySelectorAll('.celda').forEach((c,i) => c.classList.toggle('usada', !!s.usadas[i]));
+  actualizarBotonDeshacer();
+}
+function actualizarBotonDeshacer(){
+  const desactivado = historial.length === 0;
+  document.querySelectorAll('.js-deshacer').forEach(b => b.disabled = desactivado);
+}
 
 /* ---------- Render del marcador ---------- */
 function renderMarcador(){
@@ -451,10 +489,13 @@ function renderPanelPuntos(){
   });
 }
 
-function sumar(i, n){ equipos[i].puntaje += n; renderPuntajes(); }
+function sumar(i, n){ guardarEstado(); equipos[i].puntaje += n; renderPuntajes(); }
 
 function cerrarOverlay(){
-  if(actual && actual.celda) actual.celda.classList.add('usada');
+  if(actual && actual.celda && !actual.celda.classList.contains('usada')){
+    guardarEstado();
+    actual.celda.classList.add('usada');
+  }
   document.getElementById('overlay').classList.remove('abierto');
   actual = null;
 }
@@ -478,19 +519,30 @@ document.getElementById('overlay').addEventListener('click', ev=>{
 
 /* ---------- Reinicios ---------- */
 function reiniciarTablero(){
+  guardarEstado();
   document.querySelectorAll('.celda').forEach(c=>{
     if(c.textContent || c.getAttribute('role')==='button') c.classList.remove('usada');
   });
   renderTablero();
 }
 function reiniciarPuntajes(){
+  guardarEstado();
   equipos.forEach(e=>e.puntaje=0);
   renderPuntajes();
 }
 
+/* ---------- Atajo Ctrl+Z para deshacer ---------- */
+document.addEventListener('keydown', ev=>{
+  if((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase()==='z'){
+    ev.preventDefault();
+    deshacer();
+  }
+});
+
 /* ---------- Init ---------- */
 renderMarcador();
 renderTablero();
+actualizarBotonDeshacer();
 </script>
 </body>
 </html>
